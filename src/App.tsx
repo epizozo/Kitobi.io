@@ -46,7 +46,18 @@ import {
   Tags,
   CaseUpper,
   Eraser,
-  ScanText
+  ScanText,
+  Activity,
+  Code,
+  Paintbrush,
+  Terminal,
+  ShieldAlert,
+  Check,
+  FileCode,
+  Table,
+  Calendar,
+  Percent,
+  Wallet
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './lib/utils';
@@ -76,7 +87,54 @@ import {
   BackgroundRemover, 
   OCRTool,
   MarketingGen,
-  AdOptimizer
+  AdOptimizer,
+  YTTagExtractor,
+  YTTagGen,
+  YTHashtagExtractor,
+  YTHashtagGen,
+  YTTitleGen,
+  YTMoneyCalc,
+  YTTitleLength,
+  YTEmbedGen,
+  YTThumbDownloader,
+  YTLogoDownloader,
+  YTBannerDownloader,
+  YTChannelSearch,
+  YTTitleExtractor,
+  YTDescExtractor,
+  YTDescGen,
+  YTTimestampGen,
+  YTSubLinkGen,
+  YTTitleCap,
+  YTViewRatio,
+  YTChannelIdFinder,
+  YTVideoStats,
+  YTChannelStats,
+  YTRegionCheck,
+  YTCommentPicker,
+  YTChannelAge,
+  YTVideoCount,
+  SEORank,
+  SEOKeywords,
+  SEODensity,
+  SEOCache,
+  SEOIndex,
+  SEOMetaGen,
+  SEOOGGen,
+  SEOUTM,
+  DomainToIP,
+  DomainAge,
+  DomainWhois,
+  MyIP,
+  IPLookup,
+  HTMLBeautify,
+  HTMLMinify,
+  JSONValidator,
+  CSVToJSON,
+  CalcAdsense,
+  CalcAge,
+  CalcPercent,
+  CalcPaypal
 } from './components/tools/ToolWrappers';
 
 // --- State and Types ---
@@ -103,9 +161,13 @@ const CATEGORIES: Category[] = [
   { id: 'marketing', name: 'Marketing & Contenu', icon: Rocket },
   { id: 'text', name: 'Texte & Rédaction', icon: FileEdit },
   { id: 'design', name: 'Design & Visuels', icon: ImageIcon },
+  { id: 'youtube', name: 'Outils YouTube', icon: Smartphone },
+  { id: 'seo', name: 'Référencement (SEO)', icon: TrendingUp },
+  { id: 'domain', name: 'Domaine & IP', icon: Globe },
+  { id: 'dev', name: 'Développement', icon: Settings2 },
+  { id: 'calc', name: 'Calculateurs', icon: CreditCard },
   { id: 'utils', name: 'Utilitaires', icon: Zap },
 ];
-
 const TOOLS: Tool[] = [
   // 1. Marketing
   { id: 'marketing-gen', name: 'Générateur Marketing', description: 'Hooks, posts et pages de vente.', icon: Rocket, category: 'marketing', color: 'text-orange-500', isApi: true, tier: 'Pro' },
@@ -135,6 +197,86 @@ const TOOLS: Tool[] = [
   // 3. Design
   { id: 'bg-remover', name: 'Suppresseur de Fond', description: 'Détourage automatique.', icon: Eraser, category: 'design', color: 'text-blue-500', isApi: true, tier: 'Pro' },
   { id: 'ocr', name: 'Scan Texte (OCR)', description: 'Extrayez le texte des images.', icon: ScanText, category: 'text', color: 'text-zinc-400', isApi: true, tier: 'Pro' },
+
+  // 4. YouTube
+  { id: 'yt-tag-extractor', name: 'Extracteur de Balises', description: 'Extrayez les tags d\'une vidéo.', icon: Tags, category: 'youtube', color: 'text-red-500', isApi: true, tier: 'Free' },
+  { id: 'yt-tag-gen', name: 'Générateur de Balises', description: 'Tags optimisés pour le SEO.', icon: Sparkles, category: 'youtube', color: 'text-red-600', isApi: true, tier: 'Pro' },
+  { id: 'yt-hashtag-extractor', name: 'Extracteur de Hashtags', description: 'Trouvez les hashtags utilisés.', icon: Hash, category: 'youtube', color: 'text-red-400', tier: 'Free' },
+  { id: 'yt-hashtag-gen', name: 'Générateur de Hashtags', description: 'Hashtags viraux.', icon: Sparkles, category: 'youtube', color: 'text-pink-500', isApi: true, tier: 'Pro' },
+  { id: 'yt-title-extractor', name: 'Extracteur de Titre', description: 'Récupérez le titre exact.', icon: Type, category: 'youtube', color: 'text-red-500', tier: 'Free' },
+  { id: 'yt-title-gen', name: 'Générateur de Titres', description: 'Titres clickbait & SEO.', icon: Sparkles, category: 'youtube', color: 'text-red-600', isApi: true, tier: 'Pro' },
+  { id: 'yt-title-length', name: 'Vérificateur Longueur', description: 'Respectez les limites YouTube.', icon: Scale, category: 'youtube', color: 'text-zinc-500', tier: 'Free' },
+  { id: 'yt-desc-extractor', name: 'Extracteur de Description', description: 'Copiez la description complète.', icon: AlignLeft, category: 'youtube', color: 'text-red-400', tier: 'Free' },
+  { id: 'yt-desc-gen', name: 'Générateur de Description', description: 'Descriptions structurées IA.', icon: FileEdit, category: 'youtube', color: 'text-red-600', isApi: true, tier: 'Pro' },
+  { id: 'yt-embed-gen', name: 'Générateur Code Intégration', description: 'Code iframe personnalisable.', icon: LinkIcon, category: 'youtube', color: 'text-blue-500', tier: 'Free' },
+  { id: 'yt-channel-id', name: 'Recherche ID Chaîne', description: 'Trouvez l\'ID système.', icon: Search, category: 'youtube', color: 'text-zinc-500', tier: 'Free' },
+  { id: 'yt-video-stats', name: 'Statistiques Vidéo', description: 'Analyse performance IA.', icon: Target, category: 'youtube', color: 'text-red-500', isApi: true, tier: 'Pro' },
+  { id: 'yt-channel-stats', name: 'Statistiques Chaîne', description: 'Analyse globale IA.', icon: Rocket, category: 'youtube', color: 'text-red-600', isApi: true, tier: 'Pro' },
+  { id: 'yt-region-check', name: 'Restriction Région', description: 'Vérifiez les blocages géo.', icon: Globe, category: 'youtube', color: 'text-blue-400', tier: 'Free' },
+  { id: 'yt-thumb-downloader', name: 'Téléchargeur de Vignette', description: 'Récupérez l\'image HD.', icon: ImageIcon, category: 'youtube', color: 'text-red-500', tier: 'Free' },
+  { id: 'yt-logo-downloader', name: 'Logo de Chaîne', description: 'Téléchargez la photo de profil.', icon: UserCircle, category: 'youtube', color: 'text-red-400', tier: 'Free' },
+  { id: 'yt-banner-downloader', name: 'Bannière de Chaîne', description: 'Téléchargez la couverture.', icon: ImageIcon, category: 'youtube', color: 'text-red-600', tier: 'Free' },
+  { id: 'yt-channel-search', name: 'Recherche de Chaînes', description: 'Trouvez des chaînes par sujet.', icon: Search, category: 'youtube', color: 'text-zinc-500', isApi: true, tier: 'Pro' },
+  { id: 'yt-timestamp-gen', name: 'Lien d\'Horodatage', description: 'Partagez un moment précis.', icon: Zap, category: 'youtube', color: 'text-orange-500', tier: 'Free' },
+  { id: 'yt-sub-link', name: 'Lien d\'Abonnement', description: 'Boostez vos conversions.', icon: Plus, category: 'youtube', color: 'text-red-600', tier: 'Free' },
+  { id: 'yt-money-calc', name: 'Calculateur d\'Argent', description: 'Estimez les revenus potentiels.', icon: CreditCard, category: 'youtube', color: 'text-emerald-500', tier: 'Free' },
+  { id: 'yt-video-count', name: 'Compteur de Vidéos', description: 'Stats de production.', icon: Hash, category: 'youtube', color: 'text-zinc-500', tier: 'Free' },
+  { id: 'yt-title-cap', name: 'Capitaliseur de Titres', description: 'Formatage automatique.', icon: Type, category: 'youtube', color: 'text-zinc-400', tier: 'Free' },
+  { id: 'yt-comment-picker', name: 'Sélecteur de Commentaires', description: 'Gagnant pour concours.', icon: UserCircle, category: 'youtube', color: 'text-orange-400', tier: 'Free' },
+  { id: 'yt-view-ratio', name: 'Ratio de Vues', description: 'Engagement par rapport aux subs.', icon: TrendingUp, category: 'youtube', color: 'text-red-500', tier: 'Free' },
+  { id: 'yt-channel-age', name: 'Âge de la Chaîne', description: 'Date de création exacte.', icon: FileText, category: 'youtube', color: 'text-zinc-600', tier: 'Free' },
+  { id: 'yt-video-count', name: 'Compteur de Vidéos', description: 'Stats de production.', icon: Hash, category: 'youtube', color: 'text-zinc-500', tier: 'Free' },
+
+  // 5. SEO
+  { id: 'seo-rank', name: 'Classement Web', description: 'Vérifiez la position sur Google.', icon: TrendingUp, category: 'seo', color: 'text-orange-500', isApi: true, tier: 'Pro' },
+  { id: 'seo-keywords', name: 'Suggestions Mots-Clés', description: 'Idées pour votre contenu.', icon: Search, category: 'seo', color: 'text-blue-500', isApi: true, tier: 'Pro' },
+  { id: 'seo-density', name: 'Densité Mots-Clés', description: 'Analysez l\'optimisation.', icon: Hash, category: 'seo', color: 'text-emerald-500', tier: 'Free' },
+  { id: 'seo-cache', name: 'Vérificateur de Cache', description: 'Dernière visite Google.', icon: Globe, category: 'seo', color: 'text-indigo-500', isApi: true, tier: 'Pro' },
+  { id: 'seo-index', name: 'Index Google', description: 'Vérifiez l\'indexation.', icon: ScanText, category: 'seo', color: 'text-blue-400', isApi: true, tier: 'Pro' },
+  { id: 'seo-meta-gen', name: 'Tags Méta (Gen)', description: 'Créez vos balises SEO.', icon: FileEdit, category: 'seo', color: 'text-orange-600', tier: 'Free' },
+  { id: 'seo-meta-ana', name: 'Tags Méta (Ana)', description: 'Analysez vos balises.', icon: Search, category: 'seo', color: 'text-emerald-600', isApi: true, tier: 'Pro' },
+  { id: 'seo-og-gen', name: 'Open Graph (Gen)', description: 'Tags réseaux sociaux.', icon: Sparkles, category: 'seo', color: 'text-blue-600', tier: 'Free' },
+  { id: 'seo-twitter-gen', name: 'Twitter Cards', description: 'Optimisez pour X.', icon: Smartphone, category: 'seo', color: 'text-zinc-500', tier: 'Free' },
+  { id: 'seo-utm', name: 'Générateur UTM', description: 'Suivez vos campagnes.', icon: LinkIcon, category: 'seo', color: 'text-orange-500', tier: 'Free' },
+
+  // 6. Domain & IP
+  { id: 'domain-ip', name: 'Domaine vers IP', description: 'Trouvez l\'adresse serveur.', icon: Globe, category: 'domain', color: 'text-blue-500', tier: 'Free' },
+  { id: 'domain-age', name: 'Âge Domaine', description: 'Date de premier achat.', icon: FileText, category: 'domain', color: 'text-emerald-500', tier: 'Free' },
+  { id: 'domain-whois', name: 'Recherche Whois', description: 'Propriétaire du domaine.', icon: Search, category: 'domain', color: 'text-indigo-500', tier: 'Free' },
+  { id: 'domain-dns', name: 'Enregistrements DNS', description: 'A, MX, CNAME, TXT.', icon: Settings2, category: 'domain', color: 'text-blue-600', tier: 'Free' },
+  { id: 'my-ip', name: 'Mon IP', description: 'Votre adresse actuelle.', icon: Hash, category: 'domain', color: 'text-orange-500', tier: 'Free' },
+  { id: 'ip-lookup', name: 'Localisation IP', description: 'Infos ville et pays.', icon: Globe, category: 'domain', color: 'text-emerald-400', tier: 'Free' },
+
+  // 7. Web Management
+  { id: 'robots-gen', name: 'Robots.txt (Gen)', description: 'Guidez les robots.', icon: FileEdit, category: 'utils', color: 'text-zinc-600', tier: 'Free' },
+  { id: 'http-status', name: 'Code État HTTP', description: '200, 404, 500...', icon: Zap, category: 'utils', color: 'text-red-500', tier: 'Free' },
+  { id: 'htaccess-gen', name: 'Htaccess Redir', description: 'Code de redirection.', icon: Repeat, category: 'utils', color: 'text-orange-500', tier: 'Free' },
+  { id: 'server-status', name: 'État du Serveur', description: 'Disponibilité en ligne.', icon: Activity, category: 'utils', color: 'text-emerald-500', tier: 'Free' },
+  { id: 'http-headers', name: 'En-têtes HTTP', description: 'Réponse serveur brute.', icon: AlignLeft, category: 'utils', color: 'text-blue-500', tier: 'Free' },
+  { id: 'page-size', name: 'Taille de Page', description: 'Analyse du poids.', icon: Scale, category: 'utils', color: 'text-zinc-500', tier: 'Free' },
+  { id: 'wp-theme', name: 'Thème WP Detector', description: 'Trouvez le thème utilisé.', icon: LayoutGrid, category: 'utils', color: 'text-blue-400', isApi: true, tier: 'Pro' },
+  { id: 'faq-schema', name: 'Schéma FAQ', description: 'Rich snippets Google.', icon: ListIcon, category: 'utils', color: 'text-orange-600', tier: 'Free' },
+
+  // 8. Development
+  { id: 'html-beautify', name: 'HTML Beautifier', description: 'Code propre et lisible.', icon: Code, category: 'dev', color: 'text-orange-500', tier: 'Free' },
+  { id: 'html-minify', name: 'Minification HTML', description: 'Réduisez le poids.', icon: Maximize2, category: 'dev', color: 'text-orange-600', tier: 'Free' },
+  { id: 'css-beautify', name: 'CSS Beautifier', description: 'Formatage impeccable.', icon: Paintbrush, category: 'dev', color: 'text-blue-500', tier: 'Free' },
+  { id: 'css-minify', name: 'Minification CSS', description: 'Vitesse de chargement.', icon: Maximize2, category: 'dev', color: 'text-blue-600', tier: 'Free' },
+  { id: 'js-beautify', name: 'JS Beautifier', description: 'Scripts lisibles.', icon: Terminal, category: 'dev', color: 'text-yellow-500', tier: 'Free' },
+  { id: 'js-minify', name: 'Minification JS', description: 'Optimisation JS.', icon: Maximize2, category: 'dev', color: 'text-yellow-600', tier: 'Free' },
+  { id: 'js-obfuscator', name: 'Obfuscateur JS', description: 'Protégez votre code.', icon: ShieldAlert, category: 'dev', color: 'text-red-500', tier: 'Pro' },
+  { id: 'json-validator', name: 'Validateur JSON', description: 'Vérifiez la syntaxe.', icon: Check, category: 'dev', color: 'text-emerald-500', tier: 'Free' },
+  { id: 'json-to-xml', name: 'JSON en XML', description: 'Convertisseur rapide.', icon: FileCode, category: 'dev', color: 'text-blue-400', tier: 'Free' },
+  { id: 'xml-to-json', name: 'XML en JSON', description: 'Convertisseur rapide.', icon: FileCode, category: 'dev', color: 'text-orange-400', tier: 'Free' },
+  { id: 'csv-to-json', name: 'CSV en JSON', description: 'Données tabulaires.', icon: Table, category: 'dev', color: 'text-emerald-600', tier: 'Free' },
+
+  // 9. Calculators
+  { id: 'calc-adsense', name: 'Calculateur Adsense', description: 'Estimations de revenus.', icon: CreditCard, category: 'calc', color: 'text-orange-500', tier: 'Free' },
+  { id: 'calc-age', name: 'Calculateur d\'Âge', description: 'Âge précis au jour près.', icon: Calendar, category: 'calc', color: 'text-blue-500', tier: 'Free' },
+  { id: 'calc-percent', name: 'Calcul de Pourcentage', description: 'Calculs rapides.', icon: Percent, category: 'calc', color: 'text-emerald-500', tier: 'Free' },
+  { id: 'calc-paypal', name: 'Frais PayPal', description: 'Calculez les commissions.', icon: Wallet, category: 'calc', color: 'text-blue-600', tier: 'Free' },
+  { id: 'calc-cpm', name: 'Calculateur CPM', description: 'Coût pour mille vues.', icon: TrendingUp, category: 'calc', color: 'text-red-500', tier: 'Free' },
+  { id: 'calc-loan', name: 'Calculateur de Prêt', description: 'Mensualités et intérêts.', icon: Home, category: 'calc', color: 'text-indigo-500', tier: 'Free' },
 ];
 
 export default function App() {
@@ -231,6 +373,62 @@ export default function App() {
       case 'text-to-tags': return <TextToTags />;
       case 'bg-remover': return <BackgroundRemover />;
       case 'ocr': return <OCRTool />;
+      case 'yt-tag-extractor': return <YTTagExtractor />;
+      case 'yt-tag-gen': return <YTTagGen />;
+      case 'yt-hashtag-extractor': return <YTHashtagExtractor />;
+      case 'yt-hashtag-gen': return <YTHashtagGen />;
+      case 'yt-title-gen': return <YTTitleGen />;
+      case 'yt-money-calc': return <YTMoneyCalc />;
+      case 'yt-title-length': return <YTTitleLength />;
+      case 'yt-embed-gen': return <YTEmbedGen />;
+      case 'yt-thumb-downloader': return <YTThumbDownloader />;
+      case 'yt-logo-downloader': return <YTLogoDownloader />;
+      case 'yt-banner-downloader': return <YTBannerDownloader />;
+      case 'yt-channel-search': return <YTChannelSearch />;
+      case 'yt-title-extractor': return <YTTitleExtractor />;
+      case 'yt-desc-extractor': return <YTDescExtractor />;
+      case 'yt-desc-gen': return <YTDescGen />;
+      case 'yt-timestamp-gen': return <YTTimestampGen />;
+      case 'yt-sub-link': return <YTSubLinkGen />;
+      case 'yt-title-cap': return <YTTitleCap />;
+      case 'yt-view-ratio': return <YTViewRatio />;
+      case 'yt-channel-id': return <YTChannelIdFinder />;
+      case 'yt-video-stats': return <YTVideoStats />;
+      case 'yt-channel-stats': return <YTChannelStats />;
+      case 'yt-region-check': return <YTRegionCheck />;
+      case 'yt-comment-picker': return <YTCommentPicker />;
+      case 'yt-channel-age': return <YTChannelAge />;
+      case 'yt-video-count': return <YTVideoCount />;
+      
+      // SEO
+      case 'seo-rank': return <SEORank />;
+      case 'seo-keywords': return <SEOKeywords />;
+      case 'seo-density': return <SEODensity />;
+      case 'seo-cache': return <SEOCache />;
+      case 'seo-index': return <SEOIndex />;
+      case 'seo-meta-gen': return <SEOMetaGen />;
+      case 'seo-og-gen': return <SEOOGGen />;
+      case 'seo-utm': return <SEOUTM />;
+
+      // Domain
+      case 'domain-ip': return <DomainToIP />;
+      case 'domain-age': return <DomainAge />;
+      case 'domain-whois': return <DomainWhois />;
+      case 'my-ip': return <MyIP />;
+      case 'ip-lookup': return <IPLookup />;
+
+      // Dev
+      case 'html-beautify': return <HTMLBeautify />;
+      case 'html-minify': return <HTMLMinify />;
+      case 'json-validator': return <JSONValidator />;
+      case 'csv-to-json': return <CSVToJSON />;
+
+      // Calc
+      case 'calc-adsense': return <CalcAdsense />;
+      case 'calc-age': return <CalcAge />;
+      case 'calc-percent': return <CalcPercent />;
+      case 'calc-paypal': return <CalcPaypal />;
+      
       default: return (
         <div className="flex items-center justify-center h-full text-app-muted">
           Cet outil est en cours de développement.
