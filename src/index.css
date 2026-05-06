@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Outfit:wght@100..900&family=JetBrains+Mono:wght@100..800&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #fdfdfd;
+    --foreground: #010101;
+    --card: #ffffff;
+    --border: rgba(0, 0, 0, 0.08);
+    --muted: #64748b;
+    --glass: rgba(255, 255, 255, 0.8);
+  }
+
+  .dark {
+    --background: #0a0a0b;
+    --foreground: #ffffff;
+    --card: #111113;
+    --border: rgba(255, 255, 255, 0.06);
+    --muted: #94a3b8;
+    --glass: rgba(10, 10, 11, 0.7);
+  }
+
+  body {
+    @apply font-sans antialiased bg-app-bg text-app-fg;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-app-glass backdrop-blur-md border border-app-border;
+  }
+}
